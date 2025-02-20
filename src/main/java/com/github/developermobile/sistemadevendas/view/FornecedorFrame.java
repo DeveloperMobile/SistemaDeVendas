@@ -1,10 +1,12 @@
 package com.github.developermobile.sistemadevendas.view;
 
 import com.github.developermobile.sistemadevendas.domain.entities.Cliente;
+import com.github.developermobile.sistemadevendas.domain.entities.Fornecedor;
 import com.github.developermobile.sistemadevendas.domain.enums.Operations;
 import com.github.developermobile.sistemadevendas.domain.exceptions.DAOExceptions;
 import com.github.developermobile.sistemadevendas.domain.exceptions.DomainExceptions;
 import com.github.developermobile.sistemadevendas.domain.service.ClienteService;
+import com.github.developermobile.sistemadevendas.domain.service.FornecedorService;
 import com.github.developermobile.sistemadevendas.utils.FormatterUtils;
 import com.github.developermobile.sistemadevendas.utils.JOPUtil;
 import java.util.ArrayList;
@@ -18,22 +20,22 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author tiago
  */
-public class ClienteFrame extends javax.swing.JInternalFrame {
+public class FornecedorFrame extends javax.swing.JInternalFrame {
 
     private DefaultTableModel dtm;
     private ListSelectionModel listModel;
-    private List<Cliente> clientes = new ArrayList<>();
+    private List<Fornecedor> fornecedores = new ArrayList<>();
     private Operations mode;
 
-    public ClienteFrame() {
+    public FornecedorFrame() {
         initComponents();
         defineModelo();
-        btnSelecionarCliente.setVisible(false);
+        btnSelecionarFornecedor.setVisible(false);
     }
 
     private void defineModelo() {
-        dtm = (DefaultTableModel) tbClientes.getModel();
-        listModel = tbClientes.getSelectionModel();
+        dtm = (DefaultTableModel) tbFornecedores.getModel();
+        listModel = tbFornecedores.getSelectionModel();
         listModel.addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 mostraDetalhe();
@@ -44,16 +46,16 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     }
 
     private void mostraDetalhe() {
-        if (tbClientes.getSelectedRow() != -1) {
-            int indice = tbClientes.getSelectedRow();
-            tfNome.setText(clientes.get(indice).getNome());
-            tfEndereco.setText(clientes.get(indice).getEndereco());
-            tfBairro.setText(clientes.get(indice).getBairro());
-            tfCidade.setText(clientes.get(indice).getCidade());
-            cbUf.setSelectedItem(clientes.get(indice).getUf());
-            ftfCep.setText(clientes.get(indice).getCep());
-            ftfFone.setText(clientes.get(indice).getTelefone());
-            tfEmail.setText(clientes.get(indice).getEmail());
+        if (tbFornecedores.getSelectedRow() != -1) {
+            int indice = tbFornecedores.getSelectedRow();
+            tfNome.setText(fornecedores.get(indice).getNome());
+            tfEndereco.setText(fornecedores.get(indice).getEndereco());
+            tfBairro.setText(fornecedores.get(indice).getBairro());
+            tfCidade.setText(fornecedores.get(indice).getCidade());
+            cbUf.setSelectedItem(fornecedores.get(indice).getUf());
+            ftfCep.setText(fornecedores.get(indice).getCep());
+            ftfFone.setText(fornecedores.get(indice).getTelefone());
+            tfEmail.setText(fornecedores.get(indice).getEmail());
         } else {
             limparCampos();
         }
@@ -61,9 +63,9 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
 
     private void atualizaTela() {
         if (tfFilter.getText().trim().equals("")) {
-            clientes = ClienteService.getInstance().findAll(Cliente.FIND_ALL, Cliente.class);
+            fornecedores = FornecedorService.getInstance().findAll(Fornecedor.FIND_ALL, Fornecedor.class);
         } else {
-            clientes = ClienteService.getInstance().findByName(tfFilter.getText().trim(), Cliente.FIND_BY_NAME, Cliente.class);
+            fornecedores = FornecedorService.getInstance().findByName(tfFilter.getText().trim(), Fornecedor.FIND_BY_NAME, Fornecedor.class);
         }
 
         int linha = dtm.getRowCount();
@@ -72,12 +74,12 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
             dtm.removeRow(0);
         }
 
-        for (int i = 0; i < clientes.size(); i++) {
+        for (int i = 0; i < fornecedores.size(); i++) {
             dtm.insertRow(i, new Object[]{
-                clientes.get(i).getId(),
-                clientes.get(i).getNome(),
-                clientes.get(i).getTelefone(),
-                clientes.get(i).getEmail()
+                fornecedores.get(i).getId(),
+                fornecedores.get(i).getNome(),
+                fornecedores.get(i).getTelefone(),
+                fornecedores.get(i).getEmail()
             });
         }
     }
@@ -133,18 +135,18 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
 
     private void insert() {
         try {
-            Cliente cliente = new Cliente();
-            cliente.setNome(tfNome.getText().trim());
-            cliente.setEndereco(tfEndereco.getText().trim());
-            cliente.setBairro(tfBairro.getText().trim());
-            cliente.setCidade(tfCidade.getText().trim());
-            cliente.setUf(cbUf.getSelectedItem().toString());
-            cliente.setCep((String) ftfCep.getValue());
-            cliente.setTelefone((String) ftfFone.getValue());
-            cliente.setEmail(tfEmail.getText().trim());
-            ClienteService.getInstance().insert(cliente);
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.setNome(tfNome.getText().trim());
+            fornecedor.setEndereco(tfEndereco.getText().trim());
+            fornecedor.setBairro(tfBairro.getText().trim());
+            fornecedor.setCidade(tfCidade.getText().trim());
+            fornecedor.setUf(cbUf.getSelectedItem().toString());
+            fornecedor.setCep((String) ftfCep.getValue());
+            fornecedor.setTelefone((String) ftfFone.getValue());
+            fornecedor.setEmail(tfEmail.getText().trim());
+            FornecedorService.getInstance().insert(fornecedor);
 
-            JOPUtil.message("Cliente cadastrado com sucesso!",
+            JOPUtil.message("Fornecedor cadastrado com sucesso!",
                     "Confirmação",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (DomainExceptions e) {
@@ -156,19 +158,19 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
 
     private void update() {
         try {
-            Cliente cliente = new Cliente();
-            cliente.setId(clientes.get(tbClientes.getSelectedRow()).getId());
-            cliente.setNome(tfNome.getText().trim());
-            cliente.setEndereco(tfEndereco.getText().trim());
-            cliente.setBairro(tfBairro.getText().trim());
-            cliente.setCidade(tfCidade.getText().trim());
-            cliente.setUf(cbUf.getSelectedItem().toString());
-            cliente.setCep((String) ftfCep.getValue());
-            cliente.setTelefone((String) ftfFone.getValue());
-            cliente.setEmail(tfEmail.getText().trim());
-            ClienteService.getInstance().update(cliente);
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.setId(fornecedores.get(tbFornecedores.getSelectedRow()).getId());
+            fornecedor.setNome(tfNome.getText().trim());
+            fornecedor.setEndereco(tfEndereco.getText().trim());
+            fornecedor.setBairro(tfBairro.getText().trim());
+            fornecedor.setCidade(tfCidade.getText().trim());
+            fornecedor.setUf(cbUf.getSelectedItem().toString());
+            fornecedor.setCep((String) ftfCep.getValue());
+            fornecedor.setTelefone((String) ftfFone.getValue());
+            fornecedor.setEmail(tfEmail.getText().trim());
+            FornecedorService.getInstance().update(fornecedor);
 
-            JOPUtil.message("Cliente alterado com sucesso!",
+            JOPUtil.message("Fornecedor alterado com sucesso!",
                     "Confirmação",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (DomainExceptions e) {
@@ -180,8 +182,8 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     
      private void delete() {
         try {
-            ClienteService.getInstance().delete(clientes.get(tbClientes.getSelectedRow()));
-            JOPUtil.message("Cliente excluído com sucesso!", title, JOptionPane.INFORMATION_MESSAGE);
+            FornecedorService.getInstance().delete(fornecedores.get(tbFornecedores.getSelectedRow()));
+            JOPUtil.message("Fornecedor excluído com sucesso!", title, JOptionPane.INFORMATION_MESSAGE);
             atualizaTela();
             limparCampos();
         } catch (DAOExceptions e) {
@@ -201,19 +203,19 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     }
     
     private void alterar() {
-        if (tbClientes.getSelectedRow() != -1) {
+        if (tbFornecedores.getSelectedRow() != -1) {
             habilitaCampos();
             habilitaBotoes();
             mode = Operations.EDIT;
         } else {
-            JOPUtil.message("Selecione um cliente na na lista!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOPUtil.message("Selecione um fornecedor na na lista!", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }
     
     private void deletar() {
-        if (tbClientes.getSelectedRow() != -1) {
+        if (tbFornecedores.getSelectedRow() != -1) {
            int resposta = JOPUtil.confirmMessage("Confirmação", 
-                    "Confirmar a exclusão do cliente?", 
+                    "Confirmar a exclusão do fornecedor?", 
                     JOptionPane.YES_NO_OPTION, 
                     JOptionPane.INFORMATION_MESSAGE);
            if (resposta == JOptionPane.YES_NO_OPTION) {
@@ -238,7 +240,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         tfFilter = new javax.swing.JTextField();
         btnFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbClientes = new javax.swing.JTable();
+        tbFornecedores = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         lbNome = new javax.swing.JLabel();
         tfNome = new javax.swing.JTextField();
@@ -257,7 +259,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         lbEmail = new javax.swing.JLabel();
         tfEmail = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
-        btnSelecionarCliente = new javax.swing.JButton();
+        btnSelecionarFornecedor = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
@@ -277,7 +279,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
 
         lbTitle.setFont(new java.awt.Font("Serif", 1, 36)); // NOI18N
         lbTitle.setForeground(new java.awt.Color(255, 255, 255));
-        lbTitle.setText("Cadastro de Clientes");
+        lbTitle.setText("Cadastro de Fornecedores");
         jPanel1.add(lbTitle);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -320,7 +322,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(btnFilter, gridBagConstraints);
 
-        tbClientes.setModel(new javax.swing.table.DefaultTableModel(
+        tbFornecedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -343,7 +345,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tbClientes);
+        jScrollPane1.setViewportView(tbFornecedores);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -521,8 +523,8 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jPanel3, gridBagConstraints);
 
-        btnSelecionarCliente.setText("Seleciona Cliente");
-        jPanel4.add(btnSelecionarCliente);
+        btnSelecionarFornecedor.setText("Seleciona Fornecedor");
+        jPanel4.add(btnSelecionarFornecedor);
 
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -613,7 +615,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnFilter;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton btnSelecionarCliente;
+    private javax.swing.JButton btnSelecionarFornecedor;
     private javax.swing.JComboBox<String> cbUf;
     private javax.swing.JFormattedTextField ftfCep;
     private javax.swing.JFormattedTextField ftfFone;
@@ -632,7 +634,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbNome;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbUf;
-    private javax.swing.JTable tbClientes;
+    private javax.swing.JTable tbFornecedores;
     private javax.swing.JTextField tfBairro;
     private javax.swing.JTextField tfCidade;
     private javax.swing.JTextField tfEmail;

@@ -1,4 +1,4 @@
-package com.github.developermobile.sistemadevendas.domain.repository.dao;
+package com.github.developermobile.sistemadevendas.repository.dao;
 
 import com.github.developermobile.sistemadevendas.repository.JPARepository;
 import com.github.developermobile.sistemadevendas.domain.exceptions.DAOExceptions;

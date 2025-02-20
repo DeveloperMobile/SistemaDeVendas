@@ -82,6 +82,11 @@ public class Main extends javax.swing.JFrame {
 
         miFornecedor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
         miFornecedor.setText("Fornecedor");
+        miFornecedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miFornecedorActionPerformed(evt);
+            }
+        });
         mnCadastro.add(miFornecedor);
 
         miProduto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
@@ -143,6 +148,10 @@ public class Main extends javax.swing.JFrame {
     private void miClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miClienteActionPerformed
        FrameUtil.abreInternalFrame(desktopPane, new ClienteFrame(), this);
     }//GEN-LAST:event_miClienteActionPerformed
+
+    private void miFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFornecedorActionPerformed
+       FrameUtil.abreInternalFrame(desktopPane, new FornecedorFrame(), this);
+    }//GEN-LAST:event_miFornecedorActionPerformed
 
     /**
      * @param args the command line arguments

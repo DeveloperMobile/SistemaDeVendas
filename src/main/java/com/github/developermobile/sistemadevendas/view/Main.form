@@ -47,6 +47,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Fornecedor"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miFornecedorActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="miProduto">
               <Properties>
