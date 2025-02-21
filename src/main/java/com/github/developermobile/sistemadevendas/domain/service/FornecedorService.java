@@ -41,16 +41,16 @@ public class FornecedorService {
         }
     }
     
-    public List<Fornecedor> findAll(String query, Class c) {
-        List<Fornecedor> fornecedores = dao.findAll(query, c);
+    public List<Fornecedor> findAll() {
+        List<Fornecedor> fornecedores = dao.findAll(Fornecedor.FIND_ALL, Fornecedor.class);
         if (fornecedores.isEmpty()) {
             throw new DAOExceptions("Nenhum registro encontrado!");
         }
         return fornecedores;
     }
     
-    public List<Fornecedor> findByName(String name, String query, Class c) {
-        List<Fornecedor> fornecedores = dao.findByNme(name, query, c);
+    public List<Fornecedor> findByName(String name) {
+        List<Fornecedor> fornecedores = dao.findByName(name, Fornecedor.FIND_BY_NAME, Fornecedor.class);
         if (fornecedores.isEmpty()) {
             throw new DAOExceptions("Fornecedor " + name + " não encontrado!");
         }

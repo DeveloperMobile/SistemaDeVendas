@@ -74,7 +74,7 @@ public class BaseDAO<T> {
         }
     } 
     
-    public List<T> findByNme(String name, String query, Class<T> t) {
+    public List<T> findByName(String name, String query, Class<T> t) {
         EntityManager em = repository.getEntityManager();
         List<T> list = new ArrayList<>();
         

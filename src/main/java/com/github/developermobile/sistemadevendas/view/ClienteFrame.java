@@ -32,8 +32,8 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     }
 
     private void defineModelo() {
-        dtm = (DefaultTableModel) tbClientes.getModel();
-        listModel = tbClientes.getSelectionModel();
+        dtm = (DefaultTableModel) tbCliente.getModel();
+        listModel = tbCliente.getSelectionModel();
         listModel.addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 mostraDetalhe();
@@ -44,8 +44,8 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     }
 
     private void mostraDetalhe() {
-        if (tbClientes.getSelectedRow() != -1) {
-            int indice = tbClientes.getSelectedRow();
+        if (tbCliente.getSelectedRow() != -1) {
+            int indice = tbCliente.getSelectedRow();
             tfNome.setText(clientes.get(indice).getNome());
             tfEndereco.setText(clientes.get(indice).getEndereco());
             tfBairro.setText(clientes.get(indice).getBairro());
@@ -61,9 +61,9 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
 
     private void atualizaTela() {
         if (tfFilter.getText().trim().equals("")) {
-            clientes = ClienteService.getInstance().findAll(Cliente.FIND_ALL, Cliente.class);
+            clientes = ClienteService.getInstance().findAll();
         } else {
-            clientes = ClienteService.getInstance().findByName(tfFilter.getText().trim(), Cliente.FIND_BY_NAME, Cliente.class);
+            clientes = ClienteService.getInstance().findByName(tfFilter.getText().trim());
         }
 
         int linha = dtm.getRowCount();
@@ -157,7 +157,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     private void update() {
         try {
             Cliente cliente = new Cliente();
-            cliente.setId(clientes.get(tbClientes.getSelectedRow()).getId());
+            cliente.setId(clientes.get(tbCliente.getSelectedRow()).getId());
             cliente.setNome(tfNome.getText().trim());
             cliente.setEndereco(tfEndereco.getText().trim());
             cliente.setBairro(tfBairro.getText().trim());
@@ -180,8 +180,8 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     
      private void delete() {
         try {
-            ClienteService.getInstance().delete(clientes.get(tbClientes.getSelectedRow()));
-            JOPUtil.message("Cliente excluído com sucesso!", title, JOptionPane.INFORMATION_MESSAGE);
+            ClienteService.getInstance().delete(clientes.get(tbCliente.getSelectedRow()));
+            JOPUtil.message("Cliente excluído com sucesso!", "Confirmação", JOptionPane.INFORMATION_MESSAGE);
             atualizaTela();
             limparCampos();
         } catch (DAOExceptions e) {
@@ -201,19 +201,19 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     }
     
     private void alterar() {
-        if (tbClientes.getSelectedRow() != -1) {
+        if (tbCliente.getSelectedRow() != -1) {
             habilitaCampos();
             habilitaBotoes();
             mode = Operations.EDIT;
         } else {
-            JOPUtil.message("Selecione um cliente na na lista!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOPUtil.message("Selecione um cliente na lista!", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }
     
     private void deletar() {
-        if (tbClientes.getSelectedRow() != -1) {
-           int resposta = JOPUtil.confirmMessage("Confirmação", 
-                    "Confirmar a exclusão do cliente?", 
+        if (tbCliente.getSelectedRow() != -1) {
+           int resposta = JOPUtil.confirmMessage( "Confirmar a exclusão do cliente?", 
+                   "Confirmação",
                     JOptionPane.YES_NO_OPTION, 
                     JOptionPane.INFORMATION_MESSAGE);
            if (resposta == JOptionPane.YES_NO_OPTION) {
@@ -221,7 +221,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
            }
         } else {
             JOPUtil.message("Selecione um cliente na lista!", 
-                    "Erro", 
+                    "Avusi", 
                     JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -238,7 +238,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         tfFilter = new javax.swing.JTextField();
         btnFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbClientes = new javax.swing.JTable();
+        tbCliente = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         lbNome = new javax.swing.JLabel();
         tfNome = new javax.swing.JTextField();
@@ -320,7 +320,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(btnFilter, gridBagConstraints);
 
-        tbClientes.setModel(new javax.swing.table.DefaultTableModel(
+        tbCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -343,7 +343,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tbClientes);
+        jScrollPane1.setViewportView(tbCliente);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -632,7 +632,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbNome;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbUf;
-    private javax.swing.JTable tbClientes;
+    private javax.swing.JTable tbCliente;
     private javax.swing.JTextField tfBairro;
     private javax.swing.JTextField tfCidade;
     private javax.swing.JTextField tfEmail;

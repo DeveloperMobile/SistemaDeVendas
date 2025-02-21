@@ -91,6 +91,11 @@ public class Main extends javax.swing.JFrame {
 
         miProduto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
         miProduto.setText("Produto");
+        miProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miProdutoActionPerformed(evt);
+            }
+        });
         mnCadastro.add(miProduto);
 
         menuBar.add(mnCadastro);
@@ -152,6 +157,10 @@ public class Main extends javax.swing.JFrame {
     private void miFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFornecedorActionPerformed
        FrameUtil.abreInternalFrame(desktopPane, new FornecedorFrame(), this);
     }//GEN-LAST:event_miFornecedorActionPerformed
+
+    private void miProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miProdutoActionPerformed
+       FrameUtil.abreInternalFrame(desktopPane, new ProdutoFrame(), this);
+    }//GEN-LAST:event_miProdutoActionPerformed
 
     /**
      * @param args the command line arguments

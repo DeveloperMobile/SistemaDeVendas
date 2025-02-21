@@ -1,15 +1,18 @@
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/entities/Cliente.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/entities/Fornecedor.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/entities/Pessoa.java
+/home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/entities/Produto.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/enums/Operations.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/exceptions/DAOExceptions.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/exceptions/DomainExceptions.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/service/ClienteService.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/service/FornecedorService.java
+/home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/domain/service/ProdutoService.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/repository/JPARepository.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/repository/dao/BaseDAO.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/repository/dao/ClienteDAO.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/repository/dao/FornecedorDAO.java
+/home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/repository/dao/ProdutoDAO.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/utils/DesktopPanelImage.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/utils/FormatterUtils.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/utils/FrameUtil.java
@@ -18,3 +21,4 @@
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/view/ClienteFrame.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/view/FornecedorFrame.java
 /home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/view/Main.java
+/home/tiago/NetBeansProjects/SistemaDeVendas/src/main/java/com/github/developermobile/sistemadevendas/view/ProdutoFrame.java

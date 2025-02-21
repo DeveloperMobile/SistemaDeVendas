@@ -1,13 +1,14 @@
+
 package com.github.developermobile.sistemadevendas.view;
 
 import com.github.developermobile.sistemadevendas.domain.entities.Fornecedor;
+import com.github.developermobile.sistemadevendas.domain.entities.Produto;
 import com.github.developermobile.sistemadevendas.domain.enums.Operations;
 import com.github.developermobile.sistemadevendas.domain.exceptions.DAOExceptions;
 import com.github.developermobile.sistemadevendas.domain.exceptions.DomainExceptions;
-import com.github.developermobile.sistemadevendas.domain.service.FornecedorService;
+import com.github.developermobile.sistemadevendas.domain.service.ProdutoService;
 import com.github.developermobile.sistemadevendas.utils.FormatterUtils;
 import com.github.developermobile.sistemadevendas.utils.JOPUtil;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -18,195 +19,167 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author tiago
  */
-public class FornecedorFrame extends javax.swing.JInternalFrame {
-
+public class ProdutoFrame extends javax.swing.JInternalFrame {
     private DefaultTableModel dtm;
     private ListSelectionModel listModel;
-    private List<Fornecedor> fornecedores = new ArrayList<>();
+    private List<Produto> produtos;
     private Operations mode;
-    private ProdutoFrame frame;
-
-    public FornecedorFrame() {
+    private Fornecedor fornecedor;
+    
+    public ProdutoFrame() {
         initComponents();
         defineModelo();
-        btnSelecionarFornecedor.setVisible(false);
+        btnSelecionaProduto.setVisible(false);
     }
     
-    public FornecedorFrame(ProdutoFrame produtoFrame) {
-        initComponents();
-        defineModelo();
-        btnSelecionarFornecedor.setVisible(true);
-        this.frame = produtoFrame;
+    public Fornecedor getFornecedor() {
+        return fornecedor;
     }
 
+    public void setFornecedor(Fornecedor fornecedor) {
+        this.fornecedor = fornecedor;
+        tfFornecedor.setText(fornecedor.getNome()); 
+    }
+    
     private void defineModelo() {
-        dtm = (DefaultTableModel) tbFornecedor.getModel();
-        listModel = tbFornecedor.getSelectionModel();
+        dtm = (DefaultTableModel) tbProduto.getModel();
+        listModel = tbProduto.getSelectionModel();
         listModel.addListSelectionListener((ListSelectionEvent e) -> {
             if (!e.getValueIsAdjusting()) {
                 mostraDetalhe();
             }
         });
-        FormatterUtils.maskFormatter("##.###.###", ftfCep);
-        FormatterUtils.maskFormatter("(##)####-####", ftfFone);
+        
+        FormatterUtils.maskFormatterNubmer("#,###.00", ftfValor, Double.class);
+        FormatterUtils.maskFormatterNubmer("#,###", ftfEstoque, Integer.class);
+        tbProduto.getColumnModel().getColumn(1).setPreferredWidth(300);
     }
-
+    
     private void mostraDetalhe() {
-        if (tbFornecedor.getSelectedRow() != -1) {
-            int indice = tbFornecedor.getSelectedRow();
-            tfNome.setText(fornecedores.get(indice).getNome());
-            tfEndereco.setText(fornecedores.get(indice).getEndereco());
-            tfBairro.setText(fornecedores.get(indice).getBairro());
-            tfCidade.setText(fornecedores.get(indice).getCidade());
-            cbUf.setSelectedItem(fornecedores.get(indice).getUf());
-            ftfCep.setText(fornecedores.get(indice).getCep());
-            ftfFone.setText(fornecedores.get(indice).getTelefone());
-            tfEmail.setText(fornecedores.get(indice).getEmail());
+        if (tbProduto.getSelectedRow() != -1) {
+            int indice = tbProduto.getSelectedRow();
+            tfNome.setText(produtos.get(indice).getNome());
+            tfFornecedor.setText(produtos.get(indice).getFornecedor().getNome());
+            fornecedor = produtos.get(indice).getFornecedor();
+            ftfEstoque.setValue(produtos.get(indice).getQtdeEstoque());
+            ftfValor.setValue(produtos.get(indice).getValor());
         } else {
-            limparCampos();
+            limpaCampos();
         }
     }
-
+    
     private void atualizaTela() {
         if (tfFilter.getText().trim().equals("")) {
-            fornecedores = FornecedorService.getInstance().findAll();
+            produtos = ProdutoService.getInstance().findAll();
         } else {
-            fornecedores = FornecedorService.getInstance().findByName(tfFilter.getText().trim());
+            produtos = ProdutoService.getInstance().findByName(tfFilter.getText().trim());
         }
-
-        int linha = dtm.getRowCount();
-
+        
+        int linha  = dtm.getRowCount();
+        
         for (int i = 0; i < linha; i++) {
             dtm.removeRow(0);
-        }
-
-        for (int i = 0; i < fornecedores.size(); i++) {
-            dtm.insertRow(i, new Object[]{
-                fornecedores.get(i).getId(),
-                fornecedores.get(i).getNome(),
-                fornecedores.get(i).getTelefone(),
-                fornecedores.get(i).getEmail()
-            });
+        } 
+        
+        for (int i = 0; i < produtos.size(); i++) {
+           dtm.insertRow(i, new Object[]{
+               produtos.get(i).getId(),
+               produtos.get(i).getNome(),
+               String.format("%d", produtos.get(i).getQtdeEstoque()),
+               String.format("%.2f", produtos.get(i).getValor())
+           });
         }
     }
-
+    
     private void habilitaCampos() {
         tfNome.setEnabled(true);
-        tfEndereco.setEnabled(true);
-        tfBairro.setEnabled(true);
-        tfCidade.setEnabled(true);
-        cbUf.setEnabled(true);
-        ftfCep.setEnabled(true);
-        ftfFone.setEnabled(true);
-        tfEmail.setEnabled(true);
+        ftfEstoque.setEnabled(true);
+        ftfValor.setEnabled(true);
     }
-
+    
     private void desabilitaCampos() {
         tfNome.setEnabled(false);
-        tfEndereco.setEnabled(false);
-        tfBairro.setEnabled(false);
-        tfCidade.setEnabled(false);
-        cbUf.setEnabled(false);
-        ftfCep.setEnabled(false);
-        ftfFone.setEnabled(false);
-        tfEmail.setEnabled(false);
+        ftfEstoque.setEnabled(false);
+        ftfValor.setEnabled(false);
     }
-
-    private void limparCampos() {
-        tfNome.setText("");
-        tfEndereco.setText("");
-        tfBairro.setText("");
-        tfCidade.setText("");
-        cbUf.setSelectedItem("");
-        ftfCep.setText("");
-        ftfFone.setText("");
-        tfEmail.setText("");
-    }
-
+    
     private void habilitaBotoes() {
+        btnFornecedor.setEnabled(true);
         btnNovo.setEnabled(false);
         btnSalvar.setEnabled(true);
         btnAlterar.setEnabled(false);
         btnExcluir.setEnabled(false);
-        btnCancelar.setEnabled(true);
+        btnCancelar.setEnabled(true); 
     }
-
+    
     private void desabilitaBotoes() {
+        btnFornecedor.setEnabled(false);
         btnNovo.setEnabled(true);
         btnSalvar.setEnabled(false);
         btnAlterar.setEnabled(true);
         btnExcluir.setEnabled(true);
-        btnCancelar.setEnabled(false);
+        btnCancelar.setEnabled(false); 
     }
-
-    private void selecionaFornecedor() {
-        if (tbFornecedor.getSelectedRow() != -1) {
-            frame.setFornecedor(fornecedores.get(tbFornecedor.getSelectedRow()));
-            this.dispose();
-            frame.toFront();
-        } else {
-             JOPUtil.message("Selecione um fornecedor na na lista!", "Aviso", JOptionPane.WARNING_MESSAGE);
-        }
+    
+    private void limpaCampos() {
+        tfNome.setText("");
+        tfFornecedor.setText("");
+        fornecedor = null;
+        ftfEstoque.setText("");
+        ftfValor.setText("");
     }
     
     private void insert() {
         try {
-            Fornecedor fornecedor = new Fornecedor();
-            fornecedor.setNome(tfNome.getText().trim());
-            fornecedor.setEndereco(tfEndereco.getText().trim());
-            fornecedor.setBairro(tfBairro.getText().trim());
-            fornecedor.setCidade(tfCidade.getText().trim());
-            fornecedor.setUf(cbUf.getSelectedItem().toString());
-            fornecedor.setCep((String) ftfCep.getValue());
-            fornecedor.setTelefone((String) ftfFone.getValue());
-            fornecedor.setEmail(tfEmail.getText().trim());
-            FornecedorService.getInstance().insert(fornecedor);
-
-            JOPUtil.message("Fornecedor cadastrado com sucesso!",
+            Produto produto = new Produto();
+            produto.setNome(tfNome.getText().trim());
+            produto.setFornecedor(fornecedor);
+            produto.setQtdeEstoque((Integer) ftfEstoque.getValue());
+            produto.setValor((Double) ftfValor.getValue());
+            ProdutoService.getInstance().insert(produto);
+            
+            JOPUtil.message("Produto cadastrado com sucesso!",
                     "Confirmação",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (DomainExceptions e) {
-            JOPUtil.message(e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        } catch (RuntimeException e) {
-            JOPUtil.message("Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void update() {
-        try {
-            Fornecedor fornecedor = new Fornecedor();
-            fornecedor.setId(fornecedores.get(tbFornecedor.getSelectedRow()).getId());
-            fornecedor.setNome(tfNome.getText().trim());
-            fornecedor.setEndereco(tfEndereco.getText().trim());
-            fornecedor.setBairro(tfBairro.getText().trim());
-            fornecedor.setCidade(tfCidade.getText().trim());
-            fornecedor.setUf(cbUf.getSelectedItem().toString());
-            fornecedor.setCep((String) ftfCep.getValue());
-            fornecedor.setTelefone((String) ftfFone.getValue());
-            fornecedor.setEmail(tfEmail.getText().trim());
-            FornecedorService.getInstance().update(fornecedor);
-
-            JOPUtil.message("Fornecedor alterado com sucesso!",
-                    "Confirmação",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } catch (DomainExceptions e) {
-            JOPUtil.message(e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+             JOPUtil.message(e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         } catch (RuntimeException e) {
             JOPUtil.message("Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-     private void delete() {
+    private void update() {
         try {
-            FornecedorService.getInstance().delete(fornecedores.get(tbFornecedor.getSelectedRow()));
-            JOPUtil.message("Fornecedor excluído com sucesso!", title, JOptionPane.INFORMATION_MESSAGE);
-            atualizaTela();
-            limparCampos();
-        } catch (DAOExceptions e) {
-            JOPUtil.message(e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            Produto produto = new Produto();
+            produto.setId(produtos.get(tbProduto.getSelectedRow()).getId());
+            produto.setNome(tfNome.getText().trim());
+            produto.setFornecedor(fornecedor);
+            produto.setQtdeEstoque((Integer) ftfEstoque.getValue());
+            produto.setValor((Double) ftfValor.getValue());
+            
+            ProdutoService.getInstance().update(produto);
+            
+            JOPUtil.message("Produto cadastrado com sucesso!",
+                    "Confirmação",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (DomainExceptions e) {
+             JOPUtil.message(e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e) {
+            JOPUtil.message("Erro inesperado: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
+    private void delete() {
+        try {
+            ProdutoService.getInstance().delete(produtos.get(tbProduto.getSelectedRow()));
+            JOPUtil.message("Produto excluído com sucesso!", "Confirmação", JOptionPane.INFORMATION_MESSAGE);
+            atualizaTela();
+            limpaCampos();
+        } catch (DAOExceptions e) {
+            JOPUtil.message(e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     private void salvar() {
         if (mode == Operations.INSERT) {
             insert();
@@ -215,35 +188,48 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         }
         
         atualizaTela();
-        limparCampos();
+        limpaCampos();
     }
     
     private void alterar() {
-        if (tbFornecedor.getSelectedRow() != -1) {
+        if (tbProduto.getSelectedRow() != -1) {
             habilitaCampos();
             habilitaBotoes();
             mode = Operations.EDIT;
         } else {
-            JOPUtil.message("Selecione um fornecedor na na lista!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOPUtil.message("Selecione um produto na lista", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }
     
     private void deletar() {
-        if (tbFornecedor.getSelectedRow() != -1) {
-           int resposta = JOPUtil.confirmMessage("Confirmação", 
-                    "Confirmar a exclusão do fornecedor?", 
+        if (tbProduto.getSelectedRow() != -1) {
+            int resposta = JOPUtil.confirmMessage(
+                    "Confirmar a esclusão do produto?", 
+                    "Confirmação", 
                     JOptionPane.YES_NO_OPTION, 
                     JOptionPane.INFORMATION_MESSAGE);
-           if (resposta == JOptionPane.YES_NO_OPTION) {
-               delete();
-           }
+            
+            if (resposta == JOptionPane.YES_NO_OPTION) {
+                delete();
+            }
+            
         } else {
-            JOPUtil.message("Selecione um cliente na lista!", 
-                    "Erro", 
-                    JOptionPane.WARNING_MESSAGE);
+            JOPUtil.message("Selecione um produto na lista!", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }
+    
+    private void selecionaFornecedor() {
+        FornecedorFrame frame = new FornecedorFrame(this);
+        frame.setVisible(true);
+        this.getDesktopPane().add(frame);
+        frame.toFront();
+    }
 
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -256,26 +242,19 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         tfFilter = new javax.swing.JTextField();
         btnFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbFornecedor = new javax.swing.JTable();
+        tbProduto = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         lbNome = new javax.swing.JLabel();
         tfNome = new javax.swing.JTextField();
-        lbEndereco = new javax.swing.JLabel();
-        tfEndereco = new javax.swing.JTextField();
-        lbBairro = new javax.swing.JLabel();
-        tfBairro = new javax.swing.JTextField();
-        lbCidade = new javax.swing.JLabel();
-        tfCidade = new javax.swing.JTextField();
-        lbUf = new javax.swing.JLabel();
-        cbUf = new javax.swing.JComboBox<>();
-        lbCep = new javax.swing.JLabel();
-        ftfCep = new javax.swing.JFormattedTextField();
-        lbFone = new javax.swing.JLabel();
-        ftfFone = new javax.swing.JFormattedTextField();
-        lbEmail = new javax.swing.JLabel();
-        tfEmail = new javax.swing.JTextField();
+        lbFornecedor = new javax.swing.JLabel();
+        tfFornecedor = new javax.swing.JTextField();
+        btnFornecedor = new javax.swing.JButton();
+        lbEstoque = new javax.swing.JLabel();
+        ftfEstoque = new javax.swing.JFormattedTextField();
+        lbValor = new javax.swing.JLabel();
+        ftfValor = new javax.swing.JFormattedTextField();
         jPanel4 = new javax.swing.JPanel();
-        btnSelecionarFornecedor = new javax.swing.JButton();
+        btnSelecionaProduto = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
@@ -285,7 +264,7 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
-        setTitle("Cadastro de Clientes");
+        setResizable(true);
         setMinimumSize(new java.awt.Dimension(600, 500));
         setPreferredSize(new java.awt.Dimension(600, 500));
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -293,14 +272,15 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         jPanel1.setBackground(new java.awt.Color(0, 119, 0));
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        lbTitle.setFont(new java.awt.Font("Serif", 1, 36)); // NOI18N
+        lbTitle.setFont(new java.awt.Font("Serif", 0, 36)); // NOI18N
         lbTitle.setForeground(new java.awt.Color(255, 255, 255));
-        lbTitle.setText("Cadastro de Fornecedores");
+        lbTitle.setText("Cadastro de Produtos");
         jPanel1.add(lbTitle);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jPanel1, gridBagConstraints);
@@ -324,7 +304,6 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(tfFilter, gridBagConstraints);
 
-        btnFilter.setFont(new java.awt.Font("Serif", 0, 12)); // NOI18N
         btnFilter.setText("Pesquisar");
         btnFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -338,12 +317,12 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(btnFilter, gridBagConstraints);
 
-        tbFornecedor.setModel(new javax.swing.table.DefaultTableModel(
+        tbProduto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "NOME", "TELEFONE", "EMAIL"
+                "ID", "NOME", "ESTOQUE", "VALOR"
             }
         ) {
             Class[] types = new Class [] {
@@ -361,7 +340,7 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tbFornecedor);
+        jScrollPane1.setViewportView(tbProduto);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -370,12 +349,12 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -384,7 +363,7 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         lbNome.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbNome.setText("*Nome:");
+        lbNome.setText("Nome:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -402,134 +381,76 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel3.add(tfNome, gridBagConstraints);
 
-        lbEndereco.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbEndereco.setText("Endereço:");
+        lbFornecedor.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
+        lbFornecedor.setText("Fornecedor:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(lbEndereco, gridBagConstraints);
+        jPanel3.add(lbFornecedor, gridBagConstraints);
 
-        tfEndereco.setEnabled(false);
+        tfFornecedor.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(tfEndereco, gridBagConstraints);
+        jPanel3.add(tfFornecedor, gridBagConstraints);
 
-        lbBairro.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbBairro.setText("Bairro:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(lbBairro, gridBagConstraints);
-
-        tfBairro.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(tfBairro, gridBagConstraints);
-
-        lbCidade.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbCidade.setText("Cidade:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(lbCidade, gridBagConstraints);
-
-        tfCidade.setEnabled(false);
+        btnFornecedor.setText("...");
+        btnFornecedor.setEnabled(false);
+        btnFornecedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFornecedorActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(tfCidade, gridBagConstraints);
+        jPanel3.add(btnFornecedor, gridBagConstraints);
 
-        lbUf.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbUf.setText("UF:");
+        lbEstoque.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
+        lbEstoque.setText("Estoque:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(lbUf, gridBagConstraints);
+        jPanel3.add(lbEstoque, gridBagConstraints);
 
-        cbUf.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
-        cbUf.setEnabled(false);
+        ftfEstoque.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(cbUf, gridBagConstraints);
+        jPanel3.add(ftfEstoque, gridBagConstraints);
 
-        lbCep.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbCep.setText("Cep:");
+        lbValor.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
+        lbValor.setText("Valor:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(lbCep, gridBagConstraints);
+        jPanel3.add(lbValor, gridBagConstraints);
 
-        ftfCep.setEnabled(false);
+        ftfValor.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.ipadx = 60;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(ftfCep, gridBagConstraints);
-
-        lbFone.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbFone.setText("*Telefone:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(lbFone, gridBagConstraints);
-
-        ftfFone.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(ftfFone, gridBagConstraints);
-
-        lbEmail.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
-        lbEmail.setText("Email:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(lbEmail, gridBagConstraints);
-
-        tfEmail.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel3.add(tfEmail, gridBagConstraints);
+        jPanel3.add(ftfValor, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -539,13 +460,10 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(jPanel3, gridBagConstraints);
 
-        btnSelecionarFornecedor.setText("Seleciona Fornecedor");
-        btnSelecionarFornecedor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSelecionarFornecedorActionPerformed(evt);
-            }
-        });
-        jPanel4.add(btnSelecionarFornecedor);
+        jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
+
+        btnSelecionaProduto.setText("Seleciona Produto");
+        jPanel4.add(btnSelecionaProduto);
 
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -595,14 +513,19 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(jPanel4, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterActionPerformed
-        atualizaTela();
+       atualizaTela();
     }//GEN-LAST:event_btnFilterActionPerformed
+
+    private void btnFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFornecedorActionPerformed
+        selecionaFornecedor();
+    }//GEN-LAST:event_btnFornecedorActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         habilitaCampos();
@@ -610,27 +533,23 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
         mode = Operations.INSERT;
     }//GEN-LAST:event_btnNovoActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        desabilitaCampos();
-        desabilitaBotoes();
-        limparCampos();
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        salvar();
-    }//GEN-LAST:event_btnSalvarActionPerformed
-
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        alterar();
+       alterar();
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         deletar();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void btnSelecionarFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarFornecedorActionPerformed
-       selecionaFornecedor();
-    }//GEN-LAST:event_btnSelecionarFornecedorActionPerformed
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        salvar();
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        desabilitaCampos();
+        desabilitaBotoes();
+        limpaCampos();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -638,33 +557,26 @@ public class FornecedorFrame extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFilter;
+    private javax.swing.JButton btnFornecedor;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton btnSelecionarFornecedor;
-    private javax.swing.JComboBox<String> cbUf;
-    private javax.swing.JFormattedTextField ftfCep;
-    private javax.swing.JFormattedTextField ftfFone;
+    private javax.swing.JButton btnSelecionaProduto;
+    private javax.swing.JFormattedTextField ftfEstoque;
+    private javax.swing.JFormattedTextField ftfValor;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lbBairro;
-    private javax.swing.JLabel lbCep;
-    private javax.swing.JLabel lbCidade;
-    private javax.swing.JLabel lbEmail;
-    private javax.swing.JLabel lbEndereco;
+    private javax.swing.JLabel lbEstoque;
     private javax.swing.JLabel lbFilter;
-    private javax.swing.JLabel lbFone;
+    private javax.swing.JLabel lbFornecedor;
     private javax.swing.JLabel lbNome;
     private javax.swing.JLabel lbTitle;
-    private javax.swing.JLabel lbUf;
-    private javax.swing.JTable tbFornecedor;
-    private javax.swing.JTextField tfBairro;
-    private javax.swing.JTextField tfCidade;
-    private javax.swing.JTextField tfEmail;
-    private javax.swing.JTextField tfEndereco;
+    private javax.swing.JLabel lbValor;
+    private javax.swing.JTable tbProduto;
     private javax.swing.JTextField tfFilter;
+    private javax.swing.JTextField tfFornecedor;
     private javax.swing.JTextField tfNome;
     // End of variables declaration//GEN-END:variables
 }
