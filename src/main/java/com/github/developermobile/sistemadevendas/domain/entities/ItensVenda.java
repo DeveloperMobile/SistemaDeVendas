@@ -4,8 +4,6 @@ package com.github.developermobile.sistemadevendas.domain.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 /**
@@ -14,11 +12,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "ITENS_VENDA")
-@NamedQueries({
-    @NamedQuery(name = "ItensVenda.findById", query = "SELECT iv FROM ItensVenda iv INNER JOIN Venda v ON iv.id.venda.id = v.id WHERE v.id = :idVenda")
-})
 public class ItensVenda {
-    public static final String FIND_BY_ID = "ItensVenda.findById";
     
     @EmbeddedId
     private ItensVendaPK id = new ItensVendaPK();

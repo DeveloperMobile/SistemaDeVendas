@@ -1,5 +1,6 @@
 com/github/developermobile/sistemadevendas/view/ClienteFrame$2.class
 com/github/developermobile/sistemadevendas/view/VendaFrame$5.class
+com/github/developermobile/sistemadevendas/view/Main$8.class
 com/github/developermobile/sistemadevendas/view/Main$1.class
 com/github/developermobile/sistemadevendas/view/ProdutoFrame.class
 com/github/developermobile/sistemadevendas/view/ProdutoFrame$4.class
@@ -8,6 +9,7 @@ com/github/developermobile/sistemadevendas/repository/dao/VendaDAO.class
 com/github/developermobile/sistemadevendas/domain/entities/Produto.class
 com/github/developermobile/sistemadevendas/domain/entities/Cliente.class
 com/github/developermobile/sistemadevendas/domain/enums/Operations.class
+com/github/developermobile/sistemadevendas/view/ConsultaVendaFrame$3.class
 com/github/developermobile/sistemadevendas/view/VendaFrame$1.class
 com/github/developermobile/sistemadevendas/view/Main$5.class
 com/github/developermobile/sistemadevendas/utils/JOPUtil.class
@@ -34,9 +36,11 @@ com/github/developermobile/sistemadevendas/view/VendaFrame.class
 com/github/developermobile/sistemadevendas/view/ProdutoFrame$2.class
 com/github/developermobile/sistemadevendas/domain/exceptions/DomainExceptions.class
 com/github/developermobile/sistemadevendas/domain/entities/Pessoa.class
+com/github/developermobile/sistemadevendas/view/ConsultaVendaFrame$1.class
 com/github/developermobile/sistemadevendas/view/VendaFrame$3.class
 com/github/developermobile/sistemadevendas/view/Main$6.class
 com/github/developermobile/sistemadevendas/view/Main$3.class
+com/github/developermobile/sistemadevendas/view/ConsultaVendaFrame.class
 com/github/developermobile/sistemadevendas/view/FornecedorFrame$3.class
 com/github/developermobile/sistemadevendas/view/ClienteFrame$4.class
 com/github/developermobile/sistemadevendas/view/ProdutoFrame$9.class
@@ -56,6 +60,7 @@ com/github/developermobile/sistemadevendas/domain/entities/ItensVenda.class
 com/github/developermobile/sistemadevendas/view/ProdutoFrame$1.class
 com/github/developermobile/sistemadevendas/view/ClienteFrame$1.class
 com/github/developermobile/sistemadevendas/view/FornecedorFrame$6.class
+com/github/developermobile/sistemadevendas/view/ConsultaVendaFrame$2.class
 com/github/developermobile/sistemadevendas/view/FornecedorFrame$2.class
 com/github/developermobile/sistemadevendas/repository/JPARepository.class
 com/github/developermobile/sistemadevendas/view/VendaFrame$2.class

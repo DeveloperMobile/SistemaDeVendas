@@ -1,8 +1,6 @@
 
 package com.github.developermobile.sistemadevendas.domain.entities;
 
-import com.github.developermobile.sistemadevendas.domain.exceptions.DomainExceptions;
-import com.github.developermobile.sistemadevendas.view.VendaFrame;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

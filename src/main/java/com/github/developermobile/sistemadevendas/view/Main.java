@@ -114,6 +114,11 @@ public class Main extends javax.swing.JFrame {
 
         miConsultarVenda.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
         miConsultarVenda.setText("Consultar Venda");
+        miConsultarVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miConsultarVendaActionPerformed(evt);
+            }
+        });
         mnVendas.add(miConsultarVenda);
 
         menuBar.add(mnVendas);
@@ -170,6 +175,10 @@ public class Main extends javax.swing.JFrame {
     private void miRegistrarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miRegistrarVendaActionPerformed
         FrameUtil.abreInternalFrame(desktopPane, new VendaFrame(), this);
     }//GEN-LAST:event_miRegistrarVendaActionPerformed
+
+    private void miConsultarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miConsultarVendaActionPerformed
+       FrameUtil.abreInternalFrame(desktopPane, new ConsultaVendaFrame(), this);
+    }//GEN-LAST:event_miConsultarVendaActionPerformed
 
     /**
      * @param args the command line arguments
