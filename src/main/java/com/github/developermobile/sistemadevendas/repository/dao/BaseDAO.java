@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class BaseDAO<T> {
 
-    private final JPARepository repository = JPARepository.getInstance();
+    protected final JPARepository repository = JPARepository.getInstance();
 
     public boolean insert(T t) {
         EntityManager em = repository.getEntityManager();
@@ -89,7 +89,7 @@ public class BaseDAO<T> {
         }
     } 
     
-    private void exception(EntityManager em, Exception e) {
+    protected void exception(EntityManager em, Exception e) {
         System.out.println("Error: " + e.getMessage());
             if (em.isOpen()) {
                 em.getTransaction().rollback();

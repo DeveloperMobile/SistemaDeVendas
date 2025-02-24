@@ -24,6 +24,7 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     private ListSelectionModel listModel;
     private List<Cliente> clientes = new ArrayList<>();
     private Operations mode;
+    private VendaFrame vendaFrame;
 
     public ClienteFrame() {
         initComponents();
@@ -31,6 +32,13 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         btnSelecionarCliente.setVisible(false);
     }
 
+    public ClienteFrame(VendaFrame vendaFrame) {
+        initComponents();
+        defineModelo();
+        btnSelecionarCliente.setVisible(true);
+        this.vendaFrame = vendaFrame;
+    }
+    
     private void defineModelo() {
         dtm = (DefaultTableModel) tbCliente.getModel();
         listModel = tbCliente.getSelectionModel();
@@ -222,6 +230,18 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         } else {
             JOPUtil.message("Selecione um cliente na lista!", 
                     "Avusi", 
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    
+    private void selecionaCliente() {
+        if (tbCliente.getSelectedRow() != -1) {
+            vendaFrame.setCliente(clientes.get(tbCliente.getSelectedRow()));
+            this.dispose();
+            vendaFrame.toFront();
+        } else {
+            JOPUtil.message("Selecione um cliente na lista", 
+                    "Aviso", 
                     JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -522,6 +542,11 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
         getContentPane().add(jPanel3, gridBagConstraints);
 
         btnSelecionarCliente.setText("Seleciona Cliente");
+        btnSelecionarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelecionarClienteActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnSelecionarCliente);
 
         btnNovo.setText("Novo");
@@ -604,6 +629,10 @@ public class ClienteFrame extends javax.swing.JInternalFrame {
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         deletar();
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarClienteActionPerformed
+        selecionaCliente();
+    }//GEN-LAST:event_btnSelecionarClienteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -25,11 +25,19 @@ public class ProdutoFrame extends javax.swing.JInternalFrame {
     private List<Produto> produtos;
     private Operations mode;
     private Fornecedor fornecedor;
+    private VendaFrame vendaFrame;
     
     public ProdutoFrame() {
         initComponents();
         defineModelo();
         btnSelecionaProduto.setVisible(false);
+    }
+    
+    public ProdutoFrame(VendaFrame vendaFrame) {
+        initComponents();
+        defineModelo();
+        btnSelecionaProduto.setVisible(true);
+        this.vendaFrame = vendaFrame;
     }
     
     public Fornecedor getFornecedor() {
@@ -223,6 +231,18 @@ public class ProdutoFrame extends javax.swing.JInternalFrame {
         frame.setVisible(true);
         this.getDesktopPane().add(frame);
         frame.toFront();
+    }
+    
+    private void selecionaProduto() {
+        if (tbProduto.getSelectedRow() != -1) {
+            vendaFrame.setProduto(produtos.get(tbProduto.getSelectedRow()));
+            this.dispose();
+            vendaFrame.toFront();
+        } else {
+            JOPUtil.message("Selecione um produto na lista!", 
+                    "Aviso", 
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     /**
@@ -463,6 +483,11 @@ public class ProdutoFrame extends javax.swing.JInternalFrame {
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING));
 
         btnSelecionaProduto.setText("Seleciona Produto");
+        btnSelecionaProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelecionaProdutoActionPerformed(evt);
+            }
+        });
         jPanel4.add(btnSelecionaProduto);
 
         btnNovo.setText("Novo");
@@ -550,6 +575,10 @@ public class ProdutoFrame extends javax.swing.JInternalFrame {
         desabilitaBotoes();
         limpaCampos();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnSelecionaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionaProdutoActionPerformed
+       selecionaProduto();
+    }//GEN-LAST:event_btnSelecionaProdutoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

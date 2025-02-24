@@ -402,6 +402,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Seleciona Cliente"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSelecionarClienteActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnNovo">
           <Properties>
